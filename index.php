@@ -3,8 +3,8 @@
 	include_once "db/db.php";
 ?>
 <?php 
-	$p = getQueryString("p");
-	switch($p) {
+	$page = getQueryString("page");
+	switch($page) {
 		case "products": {
 			include_once "page/products.php";
 			break;
