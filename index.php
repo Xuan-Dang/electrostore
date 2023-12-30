@@ -1,5 +1,6 @@
 <?php 
 	include_once "utils/queryString.php";
+	include_once "db/db.php";
 ?>
 <?php 
 	$p = getQueryString("p");

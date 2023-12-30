@@ -130,4 +130,10 @@ $(document).ready(function() {
 <!-- for bootstrap working -->
 <script src="js/bootstrap.js"></script>
 <!-- //for bootstrap working -->
+<!-- Fetch Data -->
+<script src="js/utils/fetchData.js"></script>
+<!-- //Fetch Data -->
+<!-- Format price -->
+<script src="js/utils/formatPrice.js"></script>
+<!-- //Format price -->
 <!-- //js-files -->
