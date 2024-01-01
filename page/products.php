@@ -290,6 +290,7 @@
     include_once("inc/global/script.php");
 ?>
 <script>
+// Get products
 async function getProducts(productCategoryId, page, limit) {
     try {
         let url = `api/products.php?page=${page}&limit=${limit}`;
@@ -304,6 +305,7 @@ async function getProducts(productCategoryId, page, limit) {
     }
 }
 
+// Get Number Of Products
 async function getNumberOfProduct(productCategoryId) {
     try {
         let url = `api/number-of-product.php`;
@@ -319,9 +321,11 @@ async function getNumberOfProduct(productCategoryId) {
 }
 </script>
 <script>
+// Render products 
 async function renderProducts(productCategoryId, page, limit) {
     const productsRow = document.getElementById("products-row");
-    const products = await getProducts(productCategoryId);
+
+    const products = await getProducts(productCategoryId, page);
 
     if (!products) {
         return productsRow.innerHTML =
@@ -402,25 +406,38 @@ async function renderProducts(productCategoryId, page, limit) {
             `
     });
 
-    productsRow.innerHTML = productsColText;
+    if (page === 1) return productsRow.innerHTML = productsColText;
+
+    const lastChild = productsRow.lastElementChild;
+
+    if (lastChild) return lastChild.insertAdjacentHTML("afterend", productsColText);
+
+    productsRow.innerHTML =
+        ` <div class="row">
+            <div class="col-md-12">
+                <p>Đã có lỗi</p>
+            </div>
+        </div>`;
 }
-async function renderLoadmoreProductsBtn(productCategoryId, page, limit) {
+
+//Render loadmore btn
+async function renderLoadmoreProductsBtn(productCategoryId, page, limit, setPage) {
     const productsLoadmoreBtn = document.getElementById("products-loadmore-btn");
+
     const numberOfProduct = await getNumberOfProduct(productCategoryId);
-    async function loadMoreProducts(page) {
-        page++;
+
+    const numberOfPage = Math.ceil(numberOfProduct / limit);
+
+    if (numberOfPage > 1) productsLoadmoreBtn.classList.remove("d-none");
+
+    productsLoadmoreBtn.addEventListener("click", async () => {
+        setPage(page++);
         await renderProducts(productCategoryId, page, limit);
-    }
-    if (numberOfProduct > limit) {
-        productsLoadmoreBtn.classList.remove("d-none");
-        productsLoadmoreBtn.addEventListener("click", async () => {
-            await loadMoreProducts(loadMoreProducts);
-        })
-    }
+        if (page >= numberOfPage) productsLoadmoreBtn.classList.add("d-none");
+    })
 }
 </script>
-<script>
-</script>
+
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
     <?php if(isset($id)) { ?>
@@ -428,9 +445,17 @@ document.addEventListener("DOMContentLoaded", async () => {
     <?php }else{ ?>
     let productCategoryId = null;
     <?php } ?>
-    let page = 1;
+
+    function setPage(page) {
+        return page;
+    }
+
+    let page = setPage(1);
+
     let limit = 9;
+
     await renderProducts(productCategoryId, page, limit);
-    await renderLoadmoreProductsBtn(productCategoryId, page, limit);
+    
+    await renderLoadmoreProductsBtn(productCategoryId, page, limit, setPage);
 })
 </script>
