@@ -1,52 +1,52 @@
             <!-- product right -->
             <div class="col-lg-3 mt-lg-0 mt-4 p-lg-0">
                 <div class="side-bar p-sm-4 p-3">
-                    <div class="search-hotel border-bottom py-2">
+                    <div class="search-hotel border-bottom py-2" id="products-sidebar">
                         <h3 class="agileits-sear-head mb-3">Brand</h3>
                         <div class="left-side py-2">
                             <ul>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="1" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">Samsung</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="2" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">Red Mi</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="3" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">Apple</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="4" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">Nexus</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="5" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">Motorola</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="1" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">Micromax</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="6" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">Lenovo</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="7" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">Oppo</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="8" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">Sony</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="9" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">LG</span>
                                 </li>
-                                <li>
-                                    <input type="checkbox" class="checked">
+                                <li class="d-flex align-items-center">
+                                    <input type="checkbox" name="brand" value="10" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                                     <span class="span">One Plus</span>
                                 </li>
                             </ul>

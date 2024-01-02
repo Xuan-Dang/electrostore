@@ -11,7 +11,7 @@
 
         $offset = ($page - 1) * $limit;
 
-        $sql = "SELECT * FROM products INNER JOIN images ON products.product_image = images.image_id ORDER BY product_id DESC LIMIT ".$limit." OFFSET ".$offset;
+        $sql = "SELECT * FROM products INNER JOIN images ON products.product_image = images.image_id WHERE products.parent_id = 0 ORDER BY product_id DESC LIMIT ".$limit." OFFSET ".$offset;
         
         $products = find($sql);
         return $products;
@@ -24,7 +24,7 @@
             $limit = 9;
         }
         $offset = ($page - 1) * $limit;
-        $sql = "SELECT * FROM products INNER JOIN images ON products.product_image = images.image_id WHERE product_category = ".$categoryId." ORDER BY product_id DESC LIMIT ".$limit." OFFSET ".$offset;
+        $sql = "SELECT * FROM products INNER JOIN images ON products.product_image = images.image_id WHERE products.parent_id = 0 AND products.product_category = ".$categoryId." ORDER BY product_id DESC LIMIT ".$limit." OFFSET ".$offset;
         $products = find($sql);
         return $products;
     }
