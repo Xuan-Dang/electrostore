@@ -85,14 +85,14 @@
 document.addEventListener("DOMContentLoaded", async () => {
     let url = "api/products.php?";
 
-    let numberOfProductUrl = `api/number-of-product.php?`
+    let numberOfProductUrl = `api/number-of-product.php?`;
 
     <?php if(isset($id)) { ?>
-    url+= `product-category-id=<?php echo $id ?>`;
+    url += `product-category-id=<?php echo $id ?>`;
     numberOfProductUrl += `product-category-id=<?php echo $id ?>`;
     <?php }else{ ?>
-    url+= `product-category-id=${''}`;
-    numberOfProductUrl+= `product-category-id=${''}`;
+    url += `product-category-id=${''}`;
+    numberOfProductUrl += `product-category-id=${''}`;
     <?php } ?>
 
     function setPage(page) {
@@ -109,6 +109,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let productAttributesUrl = `api/product-attributes.php?`
 
+    // Render sidebar data
     <?php if(isset($id)) { ?>
     productAttributesUrl += `product-category-id=<?php echo $id ?>`
     <?php }else { ?>
@@ -122,14 +123,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const inputData = {};
 
     function createInputData(name, value) {
-        if (!inputData[name]) {
-            inputData[name] = []
+        if (!inputData[`filter_${name}`]) {
+            inputData[`filter_${name}`] = []
         }
 
-        if (inputData[name].filter((item) => item === value).length === 0) {
-            inputData[name].push(value);
+        if (inputData[`filter_${name}`].filter((item) => item === value).length === 0) {
+            inputData[`filter_${name}`].push(value);
         } else {
-            inputData[name] = inputData[name].filter((item) => value !== item)
+            inputData[`filter_${name}`] = inputData[`filter_${name}`].filter((item) => value !== item)
         }
     }
 
@@ -141,7 +142,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             for (let item in inputData) {
                 text += `&${item}=${inputData[item].join(',')}`
             }
-            console.log(text)
+            console.log(`${url}&page=${page}&limit=${limit}${text}`)
         })
     })
 
