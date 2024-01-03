@@ -80,6 +80,7 @@
 ?>
 
 <script src="js/products/index.js"></script>
+<script src='js/sidebar/index.js'></script>
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
     <?php if(isset($id)) { ?>
@@ -103,35 +104,11 @@ document.addEventListener("DOMContentLoaded", async () => {
 </script>
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
-    const productsSidebar = document.getElementById("products-sidebar")
     <?php if(isset($id)) { ?>
     let productCategoryId = <?php echo $id ?>;
     <?php }else{ ?>
     let productCategoryId = "";
     <?php } ?>
-    const res = await getData(`api/product-attributes.php?product-category-id=${productCategoryId}`);
-    if (res.code !== 200) return productsSidebar.innerHTML = "Đã có lỗi xả ra";
-    const productAttributes = res.data;
-    // const acc = {}
-    // productAttributes.forEach((item) => {
-    //     if(!acc[item.term_name]) {
-    //         acc[item.term_name] = [];
-    //     }
-    //     acc[item.term_name].push(item)
-    // })
-    console.log("productAttributes: ", productAttributes)
-    const news = productAttributes.reduce((acc, value) => {
-        console.log("value: ", value)
-        console.log("acc: ", acc)
-        if (!acc[value.term_name]) {
-            acc[value.term_name] = []
-        }
-        acc[value.term_name].push({
-            term_taxonomy_id: value.term_taxonomy_id,
-            term_taxonomy_name: value.term_taxonomy_name
-        })
-        return acc;
-    }, {})
-    console.log("news: ", news);
+    await renderSidebarData(productCategoryId);
 })
 </script>
