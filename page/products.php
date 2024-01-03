@@ -83,10 +83,16 @@
 <script src='js/sidebar/index.js'></script>
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
+    let url = "api/products.php?";
+
+    let numberOfProductUrl = `api/number-of-product.php?`
+
     <?php if(isset($id)) { ?>
-    let productCategoryId = <?php echo $id ?>;
+    url+= `product-category-id=<?php echo $id ?>`;
+    numberOfProductUrl += `product-category-id=<?php echo $id ?>`;
     <?php }else{ ?>
-    let productCategoryId = "";
+    url+= `product-category-id=${''}`;
+    numberOfProductUrl+= `product-category-id=${''}`;
     <?php } ?>
 
     function setPage(page) {
@@ -97,18 +103,47 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     let limit = 9;
 
-    await renderProducts(productCategoryId, page, limit);
+    await renderProducts(`${url}&page=${page}&limit=${limit}`, page);
 
-    await renderLoadmoreProductsBtn(productCategoryId, page, limit, setPage);
-})
-</script>
-<script>
-document.addEventListener("DOMContentLoaded", async () => {
+    await renderLoadmoreProductsBtn(`${numberOfProductUrl}`, page, limit, setPage, url);
+
+    let productAttributesUrl = `api/product-attributes.php?`
+
     <?php if(isset($id)) { ?>
-    let productCategoryId = <?php echo $id ?>;
-    <?php }else{ ?>
-    let productCategoryId = "";
+    productAttributesUrl += `product-category-id=<?php echo $id ?>`
+    <?php }else { ?>
+    productAttributesUrl += `product-category-id=${''}&`
     <?php } ?>
-    await renderSidebarData(productCategoryId);
+
+    await renderSidebarData(productAttributesUrl);
+
+    const productSidebarInput = document.querySelectorAll("#products-sidebar .checked");
+
+    const inputData = {};
+
+    function createInputData(name, value) {
+        if (!inputData[name]) {
+            inputData[name] = []
+        }
+
+        if (inputData[name].filter((item) => item === value).length === 0) {
+            inputData[name].push(value);
+        } else {
+            inputData[name] = inputData[name].filter((item) => value !== item)
+        }
+    }
+
+    productSidebarInput.forEach((input) => {
+        input.addEventListener("change", (e) => {
+            createInputData(e.target.name, e.target.value);
+            let text = "";
+            console.log(inputData)
+            for (let item in inputData) {
+                text += `&${item}=${inputData[item].join(',')}`
+            }
+            console.log(text)
+        })
+    })
+
 })
 </script>

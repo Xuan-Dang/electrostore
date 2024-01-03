@@ -1,10 +1,6 @@
 // Get products
-async function getProducts(productCategoryId, page, limit) {
+async function getProducts(url) {
   try {
-    let url = `api/products.php?page=${page}&limit=${limit}`;
-    if (productCategoryId) {
-      url += `api/products.php?page=${page}&limit=${limit}&product-category-id=${productCategoryId}`;
-    }
     const products = await getData(url);
     if (products.code !== 200) return false;
     return products.data;
@@ -14,12 +10,8 @@ async function getProducts(productCategoryId, page, limit) {
 }
 
 // Get Number Of Products
-async function getNumberOfProduct(productCategoryId) {
+async function getNumberOfProduct(url) {
   try {
-    let url = `api/number-of-product.php`;
-    if (productCategoryId) {
-      url += `?product-category-id=${productCategoryId}`;
-    }
     const numberOfProducts = await getData(url);
     if (numberOfProducts.code !== 200) return false;
     return Number(numberOfProducts.data[0].number_of_product);
@@ -29,10 +21,10 @@ async function getNumberOfProduct(productCategoryId) {
 }
 
 // Render products
-async function renderProducts(productCategoryId, page, limit) {
+async function renderProducts(url, page) {
   const productsRow = document.getElementById("products-row");
 
-  const products = await getProducts(productCategoryId, page);
+  const products = await getProducts(url);
 
   if (!products) {
     return (productsRow.innerHTML = `
@@ -144,14 +136,15 @@ async function renderProducts(productCategoryId, page, limit) {
 
 //Render loadmore btn
 async function renderLoadmoreProductsBtn(
-  productCategoryId,
+  url,
   page,
   limit,
-  setPage
+  setPage,
+  getProductUrl
 ) {
   const productsLoadmoreBtn = document.getElementById("products-loadmore-btn");
 
-  const numberOfProduct = await getNumberOfProduct(productCategoryId);
+  const numberOfProduct = await getNumberOfProduct(url);
 
   const numberOfPage = Math.ceil(numberOfProduct / limit);
 
@@ -159,7 +152,7 @@ async function renderLoadmoreProductsBtn(
 
   productsLoadmoreBtn.addEventListener("click", async () => {
     setPage(page++);
-    await renderProducts(productCategoryId, page, limit);
+    await renderProducts(`${getProductUrl}&page=${page}&limit=${limit}`, page);
     if (page >= numberOfPage) productsLoadmoreBtn.classList.add("d-none");
   });
 }
