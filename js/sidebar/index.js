@@ -19,6 +19,7 @@ async function getProductAttrValues(url) {
 async function renderSidebarData(url, productCategory) {
   const productsSidebar = document.getElementById("products-sidebar");
   const productAttrKeys = await getProductAttrKeys(url);
+  console.log(productAttrKeys);
   if (!productAttrKeys) return (productsSidebar.innerHTML = "Đã có lỗi xả ra");
   let attrKeyItem = "";
   for (let attrKey of productAttrKeys) {

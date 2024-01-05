@@ -114,7 +114,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     let productAttributesUrl = `api/product-attr-keys.php?product-category=${''}`;
 
     if(productCategory) {
-        productAttributesUrl += `api/product-attr-keys.php?product-category=${productCategory}`;
+        productAttributesUrl = `api/product-attr-keys.php?product-category=${productCategory}`;
     }
 
     await renderSidebarData(productAttributesUrl, productCategory);
