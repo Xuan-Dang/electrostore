@@ -83,17 +83,20 @@
 <script src='js/sidebar/index.js'></script>
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
-    let url = "api/products.php?";
+    let url = `api/products.php?product-category-id=${''}`;
 
-    let numberOfProductUrl = `api/number-of-product.php?`;
+    let numberOfProductUrl = `api/number-of-product.php?product-category-id=${''}`;
 
     <?php if(isset($id)) { ?>
-    url += `product-category-id=<?php echo $id ?>`;
-    numberOfProductUrl += `product-category-id=<?php echo $id ?>`;
+    const productCategory = <?php echo $id ?>;
     <?php }else{ ?>
-    url += `product-category-id=${''}`;
-    numberOfProductUrl += `product-category-id=${''}`;
+    const productCategory = null;
     <?php } ?>
+
+    if (productCategory) {
+        url = `api/products.php?product-category-id=${productCategory}`;
+        numberOfProductUrl = `api/number-of-product.php?product-category-id=${productCategory}`;
+    }
 
     function setPage(page) {
         return page;
@@ -107,44 +110,45 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     await renderLoadmoreProductsBtn(`${numberOfProductUrl}`, page, limit, setPage, url);
 
-    let productAttributesUrl = `api/product-attributes.php?`
-
     // Render sidebar data
-    <?php if(isset($id)) { ?>
-    productAttributesUrl += `product-category-id=<?php echo $id ?>`
-    <?php }else { ?>
-    productAttributesUrl += `product-category-id=${''}&`
-    <?php } ?>
+    let productAttributesUrl = `api/product-attr-keys.php?product-category=${''}`;
 
-    await renderSidebarData(productAttributesUrl);
+    if(productCategory) {
+        productAttributesUrl += `api/product-attr-keys.php?product-category=${productCategory}`;
+    }
+
+    await renderSidebarData(productAttributesUrl, productCategory);
 
     const productSidebarInput = document.querySelectorAll("#products-sidebar .checked");
 
     const inputData = {};
 
-    function createInputData(name, value) {
-        if (!inputData[`filter_${name}`]) {
-            inputData[`filter_${name}`] = []
-        }
+    // function createInputData(name, value) {
+    //     if (!inputData[`filter_${name}`]) {
+    //         inputData[`filter_${name}`] = []
+    //     }
 
-        if (inputData[`filter_${name}`].filter((item) => item === value).length === 0) {
-            inputData[`filter_${name}`].push(value);
-        } else {
-            inputData[`filter_${name}`] = inputData[`filter_${name}`].filter((item) => value !== item)
-        }
-    }
+    //     if (inputData[`filter_${name}`].filter((item) => item === value).length === 0) {
+    //         inputData[`filter_${name}`].push(value);
+    //     } else {
+    //         inputData[`filter_${name}`] = inputData[`filter_${name}`].filter((item) => value !== item)
+    //     }
+    // }
 
-    productSidebarInput.forEach((input) => {
-        input.addEventListener("change", (e) => {
-            createInputData(e.target.name, e.target.value);
-            let text = "";
-            console.log(inputData)
-            for (let item in inputData) {
-                text += `&${item}=${inputData[item].join(',')}`
-            }
-            console.log(`${url}&page=${page}&limit=${limit}${text}`)
-        })
-    })
+    // productSidebarInput.forEach((input) => {
+    //     input.addEventListener("change", async(e) => {
+    //         createInputData(e.target.name, e.target.value);
+    //         let text = "";
+
+    //         for (let item in inputData) {
+    //             text += `&${item}=${inputData[item].join(',')}`
+    //         }
+
+    //         await renderProducts(`${url}&page=${page}&limit=${limit}${text}`, page);
+    //         await renderLoadmoreProductsBtn(`${numberOfProductUrl}${text}`, page, limit,
+    //             setPage, url);
+    //     })
+    // })
 
 })
 </script>

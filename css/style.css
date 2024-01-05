@@ -643,9 +643,10 @@ h3.tittle-w3l span {
 }
 
 .inner-men-cart-pro .link-product-add-cart {
-    width: 100%;
+    width: 95%;
     bottom: -40px;
-    left: 0;
+    left: 50%;
+    transform: translateX(-50%);
     position: absolute;
     transition: all 0.5s ease-out 0s;
 }
@@ -697,16 +698,17 @@ h3.tittle-w3l span {
 }
 
 .inner-men-cart-pro .link-product-add-cart {
-    width: 51%;
+    width: 95%;
     top: 0;
-    left: 24%;
+    left: 50%;
+    transform: translateX(-50%);
     margin: 0 auto;
     position: absolute;
     transition: all 0.5s ease-out 0s;
 }
 
 .men-thumb-item:hover .inner-men-cart-pro .link-product-add-cart {
-    top: 81%;
+    top: 70%;
 }
 
 .link-product-add-cart:hover {

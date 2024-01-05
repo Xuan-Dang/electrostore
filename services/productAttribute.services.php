@@ -1,32 +1,41 @@
 <?php 
     include_once "../db/db.php";
-    function getAllProductAttributes() {
-        $sql = 
-        "SELECT products.product_id, ". 
-        "terms.term_id, terms.term_name, terms.term_url, ".
-        "term_taxonomy.term_taxonomy_id, term_taxonomy.term_taxonomy_name, term_taxonomy.term_taxonomy_url, ".
-        "product_attributes.product_term_id ".
-        "FROM products ". 
-        "INNER JOIN product_attributes ON products.product_id = product_attributes.product_id ".
-        "INNER JOIN term_taxonomy ON product_attributes.product_taxonomy_id = term_taxonomy.term_taxonomy_id ".
-        "INNER JOIN terms ON term_taxonomy.term_id = terms.term_id ".
-        "ORDER BY term_taxonomy.term_taxonomy_name ASC";
-        $productsAttributes = find($sql);
-        return $productsAttributes;
+    function getProductAttrKeys() {
+        $sql = "SELECT * FROM attr_keys ORDER BY attr_key_name ASC";
+        $productAttrKeys = find($sql);
+        return $productAttrKeys;
     }
-    function getProductsAttributesByProductCategory($productCategoryId) {
-        $sql =
-        "SELECT products.product_id, ".
-        "terms.term_id, terms.term_name, terms.term_url, ".
-        "term_taxonomy.term_taxonomy_id, term_taxonomy.term_taxonomy_name, term_taxonomy.term_taxonomy_url, ".
-        "product_attributes.product_term_id ".
-        "FROM products ".
-        "INNER JOIN product_attributes ON products.product_id = product_attributes.product_id ".
-        "INNER JOIN term_taxonomy ON product_attributes.product_taxonomy_id = term_taxonomy.term_taxonomy_id ".
-        "INNER JOIN terms ON term_taxonomy.term_id = terms.term_id ".
-        "WHERE products.product_category = ". $productCategoryId." ".
-        "ORDER BY term_taxonomy.term_taxonomy_name ASC";
-        $productsAttributes = find($sql);
-        return $productsAttributes;
+    function getProductAttrKeysProductCategory($productCategoryId) {
+        $sql = 
+        "SELECT products.product_id, attr_keys.attr_key_id, attr_keys.attr_key_name, attr_keys.attr_key_url 
+        FROM Products 
+        INNER JOIN product_attrs ON products.product_id = product_attrs.product_id 
+        INNER JOIN attrs ON product_attrs.attr_id = attrs.attr_id 
+        INNER JOIN attr_keys ON attrs.attr_key = attr_keys.attr_key_id 
+        WHERE products.product_category = '$productCategoryId' 
+        GROUP BY attrs.attr_key ORDER BY attr_keys.attr_key_name ASC";
+        $productAttrKeys = find($sql);
+        return $productAttrKeys;
+    }
+    function getProductAttrValues($productAttrKey) {
+        $sql = 
+        "SELECT * FROM attrs 
+        INNER JOIN attr_values ON attrs.attr_value = attr_values.attr_value_id 
+        WHERE attrs.attr_key = '$productAttrKey' 
+        ORDER BY attr_values.attr_value_name ASC";
+        $productAttrValues = find($sql);
+        return $productAttrValues;
+    }
+    function getProductAttrValuesByProductCategory($productAttrKey, $productCategoryId) {
+        $sql = 
+        "SELECT products.product_id, attr_values.attr_value_id, attr_values.attr_value_name, attr_values.attr_value_url 
+        FROM products 
+        INNER JOIN product_attrs ON product_attrs.product_id = products.product_id 
+        INNER JOIN attrs ON product_attrs.attr_id = attrs.attr_id  
+        INNER JOIN attr_values ON attrs.attr_value = attr_values.attr_value_id 
+        WHERE attrs.attr_key = '$productAttrKey' AND products.product_category = '$productCategoryId' 
+        GROUP BY attr_values.attr_value_id ORDER BY attr_values.attr_value_name ASC";
+        $productAttrValues = find($sql);
+        return $productAttrValues;
     }
 ?>

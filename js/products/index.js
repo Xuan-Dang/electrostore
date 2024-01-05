@@ -127,7 +127,8 @@ async function renderProducts(url, page) {
   if (lastChild)
     return lastChild.insertAdjacentHTML("afterend", productsColText);
 
-  productsRow.innerHTML = ` <div class="row">
+  productsRow.innerHTML = 
+      ` <div class="row">
             <div class="col-md-12">
                 <p>Đã có lỗi</p>
             </div>
