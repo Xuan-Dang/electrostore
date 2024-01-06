@@ -16,15 +16,14 @@ async function getProductAttrValues(url) {
     if (err) return false;
   }
 }
-async function renderSidebarData(url, productCategory) {
+async function renderSidebarData(getProductAttributesUrl) {
   const productsSidebar = document.getElementById("products-sidebar");
-  const productAttrKeys = await getProductAttrKeys(url);
-  console.log(productAttrKeys);
+  const productAttrKeys = await getProductAttrKeys(getProductAttributesUrl.url);
   if (!productAttrKeys) return (productsSidebar.innerHTML = "Đã có lỗi xả ra");
   let attrKeyItem = "";
   for (let attrKey of productAttrKeys) {
     let url = `api/product-attr-values.php?product-attr-key=${attrKey.attr_key_id}`;
-    if(productCategory) url += `&product-category=${productCategory}`;
+    if(getProductAttributesUrl.productCategory) url += `&product-category=${getProductAttributesUrl.productCategory}`;
     const productAttrValues = await getProductAttrValues(url);
     let productAttrValueItem = "";
     if (!productAttrValues)
@@ -32,7 +31,7 @@ async function renderSidebarData(url, productCategory) {
     productAttrValues.forEach((attrValue) => {
       productAttrValueItem += `
             <li class="d-flex align-items-center">
-                <input type="checkbox" name="${attrKey.attr_key_name}.${attrKey.attr_key_id}" value="${attrValue.attr_value_id}" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
+                <input type="checkbox" name="filter_${attrKey.attr_key_id}" value="${attrValue.attr_value_id}" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
                 <span class="span">${attrValue.attr_value_name}</span>
             </li>
             `;

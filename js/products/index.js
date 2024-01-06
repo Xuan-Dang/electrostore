@@ -5,6 +5,7 @@ async function getProducts(url) {
     if (products.code !== 200) return false;
     return products.data;
   } catch (err) {
+
     if (err) return false;
   }
 }
@@ -127,8 +128,7 @@ async function renderProducts(url, page) {
   if (lastChild)
     return lastChild.insertAdjacentHTML("afterend", productsColText);
 
-  productsRow.innerHTML = 
-      ` <div class="row">
+  productsRow.innerHTML = ` <div class="row">
             <div class="col-md-12">
                 <p>Đã có lỗi</p>
             </div>
@@ -136,24 +136,34 @@ async function renderProducts(url, page) {
 }
 
 //Render loadmore btn
-async function renderLoadmoreProductsBtn(
-  url,
-  page,
-  limit,
-  setPage,
-  getProductUrl
-) {
+async function renderLoadmoreProductsBtn(url, getProductsUrlProxy) {
   const productsLoadmoreBtn = document.getElementById("products-loadmore-btn");
+  let listennerAdded = false;
 
   const numberOfProduct = await getNumberOfProduct(url);
+  
+  const numberOfPage = Math.ceil(numberOfProduct / getProductsUrlProxy.data.limit);
+  
+  if (numberOfPage > 1) {
+    productsLoadmoreBtn.classList.remove("d-none");
+  } else {
+    productsLoadmoreBtn.classList.add("d-none");
+  }
 
-  const numberOfPage = Math.ceil(numberOfProduct / limit);
+  function handleChangePage() {
+    getProductsUrlProxy.data = {...getProductsUrlProxy.data, page: getProductsUrlProxy.data.page + 1}
+    if(getProductsUrlProxy.data.page >= numberOfPage) return productsLoadmoreBtn.classList.add("d-none");
+  }
 
-  if (numberOfPage > 1) productsLoadmoreBtn.classList.remove("d-none");
+  console.log(listennerAdded);
 
-  productsLoadmoreBtn.addEventListener("click", async () => {
-    setPage(page++);
-    await renderProducts(`${getProductUrl}&page=${page}&limit=${limit}`, page);
-    if (page >= numberOfPage) productsLoadmoreBtn.classList.add("d-none");
-  });
+  if(listennerAdded) {
+    productsLoadmoreBtn.removeEventListener("click", handleChangePage);
+    listennerAdded = false;
+    return;
+  }
+
+  productsLoadmoreBtn.addEventListener("click", handleChangePage);
+  
+  listennerAdded = true;
 }

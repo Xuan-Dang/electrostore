@@ -83,72 +83,107 @@
 <script src='js/sidebar/index.js'></script>
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
-    let url = `api/products.php?product-category-id=${''}`;
 
-    let numberOfProductUrl = `api/number-of-product.php?product-category-id=${''}`;
+    const getProductsUrl = {
+        url: `api/products.php?page=${1}&limit=${9}`,
+        data: {
+            baseUrl: `api/products.php`,
+            page: 1,
+            limit: 9,
+            productCategory: "",
+            filterString: "",
+        }
+    }
+
+    const setGetProductsUrl = {
+        set: async (target, key, value) => {
+            target[key] = value;
+            console.log(key, value);
+            let newUrl =
+                `${target.data.baseUrl}?page=${target.data.page}&limit=${target.data.limit}&product-category=${target.data.productCategory}${target.data.filterString}`;
+            await renderProducts(newUrl, target.data.page);
+        },
+    }
+
+    const getProductsUrlProxy = new Proxy(getProductsUrl, setGetProductsUrl);
+
+    await renderProducts(getProductsUrlProxy.url, getProductsUrlProxy.data.page);
+
+    const getNumberOfProductUrl = {
+        url: `api/number-of-product.php`,
+        productCategory: "",
+        filterString: "",
+    }
+
+    const setNumberOfProductUrl = {
+        set: async (target, key, value) => {
+            target[key] = value;
+            let newUrl =
+                `${target.url}?product-category=${target.productCategory}${target.filterString}`;
+            await renderLoadmoreProductsBtn(newUrl, getProductsUrlProxy);
+        }
+    }
+
+    const getNumberOfProductProxy = new Proxy(getNumberOfProductUrl, setNumberOfProductUrl);
+
+    await renderLoadmoreProductsBtn(getNumberOfProductProxy.url, getProductsUrlProxy);
+
+    const getProductAttributesUrl = {
+        url: `api/product-attr-keys.php`,
+        productCategory: "",
+    }
+
+    const setProductAttributesUrl = {
+        set: async (target, key, value) => {
+            target[key] = value;
+            let newUrl =
+                `${target.url}?product-category=${target.productCategory}${target.filterString}`;
+            await renderSidebarData(newUrl);
+        }
+    }
+
+    const getProductAttributesUrlProxy = new Proxy(getProductAttributesUrl, setProductAttributesUrl);
+
+    await renderSidebarData(getProductAttributesUrl);
 
     <?php if(isset($id)) { ?>
-    const productCategory = <?php echo $id ?>;
-    <?php }else{ ?>
-    const productCategory = null;
-    <?php } ?>
-
-    if (productCategory) {
-        url = `api/products.php?product-category-id=${productCategory}`;
-        numberOfProductUrl = `api/number-of-product.php?product-category-id=${productCategory}`;
-    }
-
-    function setPage(page) {
-        return page;
-    }
-
-    let page = setPage(1);
-
-    let limit = 9;
-
-    await renderProducts(`${url}&page=${page}&limit=${limit}`, page);
-
-    await renderLoadmoreProductsBtn(`${numberOfProductUrl}`, page, limit, setPage, url);
-
-    // Render sidebar data
-    let productAttributesUrl = `api/product-attr-keys.php?product-category=${''}`;
-
-    if(productCategory) {
-        productAttributesUrl = `api/product-attr-keys.php?product-category=${productCategory}`;
-    }
-
-    await renderSidebarData(productAttributesUrl, productCategory);
+    getProductsUrlProxy.productCategory = <?php echo $id ?>;
+    getNumberOfProductProxy.productCategory = <?php echo $id ?>;
+    getProductAttributesUrlProxy.productCategory = <?php echo $id ?>;
+    <?php }?>
 
     const productSidebarInput = document.querySelectorAll("#products-sidebar .checked");
 
     const inputData = {};
 
-    // function createInputData(name, value) {
-    //     if (!inputData[`filter_${name}`]) {
-    //         inputData[`filter_${name}`] = []
-    //     }
+    function createInputData(name, value) {
+        if (!inputData[`${name}`]) {
+            inputData[`${name}`] = []
+        }
 
-    //     if (inputData[`filter_${name}`].filter((item) => item === value).length === 0) {
-    //         inputData[`filter_${name}`].push(value);
-    //     } else {
-    //         inputData[`filter_${name}`] = inputData[`filter_${name}`].filter((item) => value !== item)
-    //     }
-    // }
+        if (inputData[`${name}`].filter((item) => item === value).length === 0) {
+            inputData[`${name}`].push(value);
+        } else {
+            inputData[`${name}`] = inputData[`${name}`].filter((item) => value !== item)
+        }
+    }
 
-    // productSidebarInput.forEach((input) => {
-    //     input.addEventListener("change", async(e) => {
-    //         createInputData(e.target.name, e.target.value);
-    //         let text = "";
+    productSidebarInput.forEach((input) => {
+        input.addEventListener("change", async (e) => {
+            createInputData(e.target.name, e.target.value);
 
-    //         for (let item in inputData) {
-    //             text += `&${item}=${inputData[item].join(',')}`
-    //         }
+            let text = "";
 
-    //         await renderProducts(`${url}&page=${page}&limit=${limit}${text}`, page);
-    //         await renderLoadmoreProductsBtn(`${numberOfProductUrl}${text}`, page, limit,
-    //             setPage, url);
-    //     })
-    // })
+            for (let item in inputData) {
+                text += `&${item}=${inputData[item].join(',')}`
+            }
+
+            getProductsUrlProxy.data = {... getProductsUrlProxy.data, page:1, filterString:text}
+
+            getNumberOfProductProxy.filterString = text;
+
+        })
+    })
 
 })
 </script>
