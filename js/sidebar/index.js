@@ -31,7 +31,7 @@ async function renderSidebarData(getProductAttributesUrl) {
     productAttrValues.forEach((attrValue) => {
       productAttrValueItem += `
             <li class="d-flex align-items-center">
-                <input type="checkbox" name="filter_${attrKey.attr_key_id}" value="${attrValue.attr_value_id}" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;">
+                <input type="checkbox" name="filter_${attrKey.attr_key_id}" value="${attrValue.attr_value_id}" class="checked m-0 p-2 d-block mr-1" style="width: 20px; height: 20px;" />
                 <span class="span">${attrValue.attr_value_name}</span>
             </li>
             `;

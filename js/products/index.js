@@ -138,7 +138,6 @@ async function renderProducts(url, page) {
 //Render loadmore btn
 async function renderLoadmoreProductsBtn(url, getProductsUrlProxy) {
   const productsLoadmoreBtn = document.getElementById("products-loadmore-btn");
-  let listennerAdded = false;
 
   const numberOfProduct = await getNumberOfProduct(url);
   
@@ -150,20 +149,9 @@ async function renderLoadmoreProductsBtn(url, getProductsUrlProxy) {
     productsLoadmoreBtn.classList.add("d-none");
   }
 
-  function handleChangePage() {
+  productsLoadmoreBtn.onclick = function handleChangePage() {
     getProductsUrlProxy.data = {...getProductsUrlProxy.data, page: getProductsUrlProxy.data.page + 1}
     if(getProductsUrlProxy.data.page >= numberOfPage) return productsLoadmoreBtn.classList.add("d-none");
   }
-
-  console.log(listennerAdded);
-
-  if(listennerAdded) {
-    productsLoadmoreBtn.removeEventListener("click", handleChangePage);
-    listennerAdded = false;
-    return;
-  }
-
-  productsLoadmoreBtn.addEventListener("click", handleChangePage);
   
-  listennerAdded = true;
 }
