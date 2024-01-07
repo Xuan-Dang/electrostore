@@ -9,6 +9,10 @@
 			include_once "page/products.php";
 			break;
 		}
+		case "single-product": {
+			include_once "page/single-product.php";
+			break;
+		}
 		default: {
 			include_once "page/home.php";
 		}

@@ -9,8 +9,9 @@ async function getProducts(url) {
     if (err) return false;
   }
 }
+// --Get products
 
-// Get Number Of Products
+// Get number of products
 async function getNumberOfProduct(url) {
   try {
     const numberOfProducts = await getData(url);
@@ -20,6 +21,7 @@ async function getNumberOfProduct(url) {
     if (err) return false;
   }
 }
+// --Get number of products
 
 // Render products
 async function renderProducts(url, page) {
@@ -134,6 +136,7 @@ async function renderProducts(url, page) {
             </div>
         </div>`;
 }
+// --Render products
 
 //Render loadmore btn
 async function renderLoadmoreProductsBtn(url, getProductsUrlProxy) {
@@ -155,3 +158,4 @@ async function renderLoadmoreProductsBtn(url, getProductsUrlProxy) {
   }
   
 }
+// --Render loadmore btn

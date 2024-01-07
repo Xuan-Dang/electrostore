@@ -150,7 +150,10 @@ document.addEventListener("DOMContentLoaded", async () => {
     const getProductAttributesUrlProxy = new Proxy(getProductAttributesUrl, setProductAttributesUrl);
 
     await renderSidebarData(getProductAttributesUrlProxy);
+
     addInputElementEvent();
+
+    //Add input element click event;
     function addInputElementEvent() {
         const productSidebarInput = document.querySelectorAll("#products-sidebar .checked");
 

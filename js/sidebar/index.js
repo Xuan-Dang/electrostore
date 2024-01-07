@@ -1,3 +1,4 @@
+//Get product attribute key function
 async function getProductAttrKeys(url) {
   try {
     const res = await getData(url);
@@ -7,6 +8,9 @@ async function getProductAttrKeys(url) {
     if (err) return false;
   }
 }
+// --Get product attribute key function
+
+// Get product attribute value function
 async function getProductAttrValues(url) {
   try {
     const res = await getData(url);
@@ -16,6 +20,9 @@ async function getProductAttrValues(url) {
     if (err) return false;
   }
 }
+// --Get product attribute value function
+
+// Render sidebar data
 async function renderSidebarData(getProductAttributesUrl) {
   const productsSidebar = document.getElementById("products-sidebar");
   const productAttrKeys = await getProductAttrKeys(getProductAttributesUrl.url);
@@ -50,3 +57,4 @@ async function renderSidebarData(getProductAttributesUrl) {
   }
   productsSidebar.innerHTML = attrKeyItem;
 }
+// --Render sidebar data
