@@ -1,11 +1,48 @@
 <?php 
     $pageTitle = "Chi tiết sản phẩm";
     $pageDescription = "";
+    $url = getQueryString('url');
+    $urlArray = [];
+    $productId = null;
+    $productRes = null;
+    $product = null;
+    $productImagesListRes = null;
+    $productImagesList = [];
+    if(isset($url) && $url) {
+        $urlArray = explode('.', $url);
+    }
+    if(count($urlArray) > 1 && isset($urlArray[1])) {
+        $productId = $urlArray[1];
+    }
+    if(isset($productId) && $productId) {
+        $sql = 
+        "SELECT * FROM products 
+        INNER JOIN images ON products.product_image = images.image_id 
+        INNER JOIN product_images ON products.product_id = product_images.product_id 
+        WHERE products.product_id = $productId";
+        $sql2 = 
+        "SELECT * FROM products 
+        INNER JOIN product_images ON products.product_id = product_images.product_id 
+        INNER JOIN images ON product_images.image_id = images.image_id 
+        WHERE products.product_id = $productId";
+        $productRes = findOne($sql);
+        $productImagesListRes = find($sql2);
+    }
+    if(isset($productRes) && $productRes && $productRes['code'] === 200) {
+        $product = $productRes['data'];
+    }
+    if(isset($productImagesListRes) && $productImagesListRes && $productImagesListRes['code'] == 200) {
+        $productImagesList = $productImagesListRes['data'];
+    }
+    if(isset($product) && $product) {
+        $pageTitle = $product['product_name'];
+        $pageDescription = $product['product_description'];
+    }
     include_once "inc/global/header.php";
 ?>
-<!-- banner-2 -->
-<div class="page-head_agile_info_w3l"></div>
-<!-- //banner-2 -->
+<pre>
+   <?php print_r($product) ?>
+</pre>
 <!-- page -->
 <div class="services-breadcrumb">
     <div class="agile_inner_breadcrumb">
@@ -15,7 +52,9 @@
                     <a href="index.html">Home</a>
                     <i>|</i>
                 </li>
-                <li>Single Product 1</li>
+                <?php if(isset($pageTitle)) { ?>
+                <li><?php echo $pageTitle; ?></li>
+                <?php } ?>
             </ul>
         </div>
     </div>
@@ -26,27 +65,46 @@
 <div class="banner-bootom-w3-agileits py-5">
     <div class="container py-xl-4 py-lg-2">
         <!-- tittle heading -->
-        <h3 class="tittle-w3l text-center mb-lg-5 mb-sm-4 mb-3">
-            <span>S</span>ingle
-            <span>P</span>age</h3>
+        <h1 class="tittle-w3l text-center mb-lg-5 mb-sm-4 mb-3">
+            <?php if(isset($pageTitle)) {
+                echo $pageTitle;
+            }else {
+                echo "Chi tiết sản phẩm";
+            } ?>
+        </h1>
         <!-- //tittle heading -->
         <div class="row">
             <div class="col-lg-5 col-md-8 single-right-left ">
                 <div class="grid images_3_of_2">
                     <div class="flexslider">
                         <ul class="slides">
-                            <li data-thumb="images/si1.jpg">
+                            <?php if(isset($productImagesList) && count($productImagesList) > 0) { ?>
+                            <?php foreach($productImagesList as $image) { ?>
+                            <li data-thumb="<?php echo $image['image_url'] ?>">
                                 <div class="thumb-image">
-                                    <img src="images/si1.jpg" data-imagezoom="true" class="img-fluid" alt=""> </div>
+                                    <img src="<?php echo $image['image_url'] ?>" data-imagezoom="true" class="img-fluid"
+                                        alt="<?php echo $image['image_alt'] ?>"
+                                        title="<?php echo $image['image_title'] ?>" loading="lazy">
+                                </div>
                             </li>
-                            <li data-thumb="images/si2.jpg">
+                            <?php } ?>
+                            <?php }else { ?>
+
+                            <?php if(isset($product['image_url'])) { ?>
+                            <li data-thumb="<?php echo $product['image_url'] ?>">
                                 <div class="thumb-image">
-                                    <img src="images/si2.jpg" data-imagezoom="true" class="img-fluid" alt=""> </div>
+                                    <img src="<?php echo $product['image_url'] ?>" data-imagezoom="true"
+                                        class="img-fluid" alt="<?php echo $product['image_alt'] ?>">
+                                </div>
                             </li>
-                            <li data-thumb="images/si3.jpg">
+                            <?php }else { ?>
+                            <li>
                                 <div class="thumb-image">
-                                    <img src="images/si3.jpg" data-imagezoom="true" class="img-fluid" alt=""> </div>
+                                    Sản phẩm không có hình ảnh
+                                </div>
                             </li>
+                            <?php } ?>
+                            <?php } ?>
                         </ul>
                         <div class="clearfix"></div>
                     </div>
@@ -54,7 +112,15 @@
             </div>
 
             <div class="col-lg-7 single-right-left simpleCart_shelfItem">
-                <h3 class="mb-3">Samsung Galaxy J7 Prime (Gold, 16 GB) (3 GB RAM)</h3>
+                <h2 class="mb-3">
+                    <?php 
+                        if(isset($pageTitle)) {
+                            echo $pageTitle;
+                        }else {
+                            echo "Chi tiết sản phẩm";
+                        }
+                    ?>
+                </h2>
                 <p class="mb-3">
                     <span class="item_price">$200.00</span>
                     <del class="mx-2 font-weight-light">$280.00</del>
@@ -79,7 +145,8 @@
                 <div class="product-single-w3l">
                     <p class="my-3">
                         <i class="far fa-hand-point-right mr-2"></i>
-                        <label>1 Year</label>Manufacturer Warranty</p>
+                        <label>1 Year</label>Manufacturer Warranty
+                    </p>
                     <ul>
                         <li class="mb-1">
                             3 GB RAM | 16 GB ROM | Expandable Upto 256 GB
@@ -128,20 +195,20 @@
     include_once "inc/global/footer.php";
     include_once "inc/global/script.php";
 ?>
-	<!-- imagezoom -->
-	<script src="js/imagezoom.js"></script>
-	<!-- //imagezoom -->
-    <!-- flexslider -->
-	<link rel="stylesheet" href="css/flexslider.css" type="text/css" media="screen" />
+<!-- imagezoom -->
+<script src="js/imagezoom.js"></script>
+<!-- //imagezoom -->
+<!-- flexslider -->
+<link rel="stylesheet" href="css/flexslider.css" type="text/css" media="screen" />
 
-    <script src="js/jquery.flexslider.js"></script>
-    <script>
-        // Can also be used with $(document).ready()
-        $(window).load(function () {
-            $('.flexslider').flexslider({
-                animation: "slide",
-                controlNav: "thumbnails"
-            });
-        });
-    </script>
-    <!-- //FlexSlider-->
+<script src="js/jquery.flexslider.js"></script>
+<script>
+// Can also be used with $(document).ready()
+$(window).load(function() {
+    $('.flexslider').flexslider({
+        animation: "slide",
+        controlNav: "thumbnails"
+    });
+});
+</script>
+<!-- //FlexSlider-->

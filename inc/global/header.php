@@ -8,11 +8,19 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <html lang="zxx">
 
 <head>
-    <title><?php echo $pageTitle ?></title>
+    <?php if(isset($pageTitle)) {?>
+        <title><?php echo $pageTitle  ?></title>
+    <?php }else { ?>
+        <title>Đã có lỗi xảy ra</title>
+    <?php } ?>
     <!-- Meta tag Keywords -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta charset="UTF-8" />
-    <meta name="description" content="<?php echo $pageDescription ?>" />
+    <?php if(isset($pageDescription)) { ?>
+        <meta name='description' content="<?php echo $pageDescription ?>" />
+    <?php } else {?>
+            <meta name='description' content='' />
+    <?php } ?>
     <script>
     addEventListener("load", function() {
         setTimeout(hideURLbar, 0);
