@@ -43,8 +43,7 @@ $(document).ready(function() {
 <!-- cart-js -->
 <script src="js/minicart.js"></script>
 <script>
-paypals.minicarts
-.render(); //use only unique class names other than paypals.minicarts.Also Replace same class name in css and minicart.min.js
+paypals.minicarts.render(); //use only unique class names other than paypals.minicarts.Also Replace same class name in css and minicart.min.js
 
 paypals.minicarts.cart.on('checkout', function(evt) {
     var items = this.items(),
