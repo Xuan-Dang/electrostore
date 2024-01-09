@@ -5,7 +5,6 @@ async function getProducts(url) {
     if (products.code !== 200) return false;
     return products.data;
   } catch (err) {
-
     if (err) return false;
   }
 }

@@ -35,6 +35,6 @@
     }else {
         $products = getProductsByCategory($productCategoryId, $page, $limit, $attrKeys, $attrValues);
     }
-
+   
     echo json_encode($products);
 ?>
